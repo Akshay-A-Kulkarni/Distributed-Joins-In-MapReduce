@@ -6,7 +6,7 @@
 hadoop.root=/home/akshay/hadoop-2.9.2
 jar.name=mr-demo-1.0.jar
 jar.path=target/${jar.name}
-job.name=tc.TriangleCount
+job.name=tc.RSJoinTriangleCount
 local.input=input
 local.output=output
 # Pseudo-Cluster Execution

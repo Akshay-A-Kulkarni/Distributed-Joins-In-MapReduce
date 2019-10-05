@@ -7,7 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="FollowerCount-MapReduce" />
-        <module name="tc-MapReduce" />
+        <module name="tc-ReduceSideJoin" />
       </profile>
     </annotationProcessing>
   </component>
