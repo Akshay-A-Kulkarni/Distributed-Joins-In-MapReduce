@@ -89,7 +89,7 @@ public class RSJoinTriangleCount extends Configured implements Tool {
 
     public static void main(final String[] args) {
         if (args.length != 3) {
-            throw new Error("Two arguments required:\n<input-dir> <output-dir> <MaxNodeNumber>");
+            throw new Error("Three arguments required:\n<input-dir> <output-dir> <MaxNodeNumber>");
         }
         try {
             ToolRunner.run(new RSJoinTriangleCount(), args);
