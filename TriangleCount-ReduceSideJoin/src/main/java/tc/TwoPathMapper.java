@@ -7,8 +7,8 @@ import java.io.IOException;
 
 
 public class TwoPathMapper extends Mapper<Object, Text, Text, Text> {
-    private static final Text I = new Text("I");
-    private static final Text O = new Text("O");
+    private static final String I = "I";
+    private static final String O = "O";
 
     private final Text E1 = new Text();
     private final Text E2 = new Text();
@@ -32,10 +32,10 @@ public class TwoPathMapper extends Mapper<Object, Text, Text, Text> {
         if (Integer.parseInt(edge[0]) <= MAX & Integer.parseInt(edge[1]) <= MAX) {
             E1.set(edge[0]);
             E2.set(edge[1]);
-            EdgeVal.set(O.toString()+E2.toString());
-            context.write(E1,EdgeVal);
-            EdgeVal.set(I.toString()+E1.toString());
+            EdgeVal.set(O+edge[0]);
             context.write(E2,EdgeVal);
+            EdgeVal.set(I+edge[1]);
+            context.write(E1,EdgeVal);
         }
     }
 }

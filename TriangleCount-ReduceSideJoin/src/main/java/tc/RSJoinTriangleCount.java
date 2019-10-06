@@ -66,13 +66,13 @@ public class RSJoinTriangleCount extends Configured implements Tool {
             job2.getConfiguration().set("max.filter", MaxFilter);
 
             MultipleInputs.addInputPath(job2, new Path(args[1] + "/temp"),
-                    TextInputFormat.class, TriangleMapper.class);
+                    TextInputFormat.class, RSMappers.TriangleMapper2.class);
 
             MultipleInputs.addInputPath(job2, new Path(otherArgs[0]),
-                    TextInputFormat.class, TriangleMapper.class);
+                    TextInputFormat.class, RSMappers.TriangleMapper1.class);
             FileOutputFormat.setOutputPath(job2, new Path(args[1] + "/final"));
 
-            job2.setMapperClass(TriangleMapper.class);
+//            job2.setMapperClass(RSMappers.class);
             job2.setReducerClass(TriangleReducer.class);
 
             job2.setOutputKeyClass(Text.class);
