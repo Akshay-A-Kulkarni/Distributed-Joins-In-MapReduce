@@ -4,10 +4,11 @@
 # Customize these paths for your environment.
 # -----------------------------------------------------------
 hadoop.root=/home/akshay/hadoop-2.9.2
-jar.name=mr-demo-1.0.jar
+max.filter = 1000
+jar.name=tc-RepJoin-1.0.jar
 jar.path=target/${jar.name}
 job.name=tc.RepJoinTriangleCount
-local.input=input
+local.input=/home/akshay/Desktop/CS6240-LSPDP/Twitter-dataset/data
 local.output=output
 # Pseudo-Cluster Execution
 hdfs.user.name=akshay
@@ -84,7 +85,7 @@ download-output-hdfs: clean-local-output
 # Make sure Hadoop  is set up (in /etc/hadoop files) for pseudo-clustered operation (not standalone).
 # https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html#Pseudo-Distributed_Operation
 pseudo: jar stop-yarn format-hdfs init-hdfs upload-input-hdfs start-yarn clean-local-output 
-	${hadoop.root}/bin/hadoop jar ${jar.path} ${job.name} ${hdfs.input} ${hdfs.output}
+	${hadoop.root}/bin/hadoop jar ${jar.path} ${job.name} ${hdfs.input} ${hdfs.output} ${max.filter}
 	make download-output-hdfs
 
 # Runs pseudo-clustered (quickie).

@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>fc</groupId>
-  <artifactId>tc-MapReduce</artifactId>
+  <artifactId>tc-RepJoin</artifactId>
   <version>1.0</version>
 
   <name>tc-MapReduce</name>

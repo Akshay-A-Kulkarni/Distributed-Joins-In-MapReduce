@@ -44,27 +44,28 @@ public class RepJoinTriangleCount extends Configured implements Tool {
 
 //      =======================================================================
 		 //Delete output directory, only to ease local development; will not work on AWS.
-        final FileSystem fileSystem = FileSystem.get(conf);
-        if (fileSystem.exists(new Path(args[1]))) {
-            fileSystem.delete(new Path(args[1]), true);
-        }
+//        final FileSystem fileSystem = FileSystem.get(conf);
+//        if (fileSystem.exists(new Path(args[1]))) {
+//            fileSystem.delete(new Path(args[1]), true);
+//        }
 //		 ======================================================================
 
         job.getConfiguration().set("max.filter", MaxFilter);
         job.setMapperClass(TriangleMapper.class);
-        job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Text.class);
+//        job.setOutputKeyClass(Text.class);
+//        job.setOutputValueClass(Text.class);
+        job.setNumReduceTasks(0);
+        job.addCacheFile(new URI (args[0] + "#CacheFILE"));
+
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
-
         // Adding Files to Cache
-
-        FileSystem fs = FileSystem.get(new URI(args[0]), conf);
-        FileStatus[] fileStatus = fs.listStatus(new Path(args[0]));
-        for(FileStatus status : fileStatus){
-            job.addCacheFile(new URI (status.getPath().toString()));
-        }
+//        FileSystem fs = FileSystem.get(new URI(args[0]), conf);
+//        FileStatus[] fileStatus = fs.listStatus(new Path(args[0]));
+//        for(FileStatus status : fileStatus){
+//        job.addCacheFile(new URI (status.getPath().toString()));
+//        }
 
 
         int finished = job.waitForCompletion(true) ? 0:1;

@@ -1,14 +1,17 @@
 package tc;
 
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -35,9 +38,7 @@ public class TriangleMapper extends Mapper<Object, Text, Text, Text> {
         if (cacheFiles != null && cacheFiles.length > 0) {
             try
             {
-                FileSystem fs = FileSystem.get(context.getConfiguration());
-                Path path = new Path(cacheFiles[0].toString());
-                BufferedReader reader = new BufferedReader(new InputStreamReader(fs.open(path)));
+                BufferedReader reader = new BufferedReader(new FileReader("CacheFILE"));
 
                 String in;
 

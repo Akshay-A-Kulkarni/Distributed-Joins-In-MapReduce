@@ -42,10 +42,10 @@ public class RSJoinTriangleCount extends Configured implements Tool {
         jobConf.set("mapreduce.output.textoutputformat.separator", ",");
 //      =======================================================================
 		 //Delete output directory, only to ease local development; will not work on AWS.
-        final FileSystem fileSystem = FileSystem.get(conf1);
-        if (fileSystem.exists(new Path(args[1]))) {
-            fileSystem.delete(new Path(args[1]), true);
-        }
+//        final FileSystem fileSystem = FileSystem.get(conf1);
+//        if (fileSystem.exists(new Path(args[1]))) {
+//            fileSystem.delete(new Path(args[1]), true);
+//        }
 //		 ======================================================================
         job1.getConfiguration().set("max.filter", MaxFilter);
         job1.setMapperClass(TwoPathMapper.class);

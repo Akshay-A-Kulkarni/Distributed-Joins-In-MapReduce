@@ -1,3 +1,6 @@
-fc/FollowerCount.class
-fc/FollowerCount$FollowerMapper.class
-fc/FollowerCount$TotalFollowerReducer.class
+tc/RSJoinTriangleCount$COUNTER.class
+tc/TriangleMapper.class
+tc/TwoPathReducer.class
+tc/TriangleReducer.class
+tc/RSJoinTriangleCount.class
+tc/TwoPathMapper.class
