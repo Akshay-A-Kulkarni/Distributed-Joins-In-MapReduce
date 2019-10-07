@@ -72,7 +72,6 @@ public class RSJoinTriangleCount extends Configured implements Tool {
                     TextInputFormat.class, RSMappers.TriangleMapper1.class);
             FileOutputFormat.setOutputPath(job2, new Path(args[1] + "/final"));
 
-//            job2.setMapperClass(RSMappers.class);
             job2.setReducerClass(TriangleReducer.class);
 
             job2.setOutputKeyClass(Text.class);

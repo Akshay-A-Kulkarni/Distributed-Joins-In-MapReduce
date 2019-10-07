@@ -7,6 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class TriangleReducer extends Reducer<Text, Text, Text, Text> {
 
@@ -14,35 +19,22 @@ public class TriangleReducer extends Reducer<Text, Text, Text, Text> {
     public void reduce(final Text key, final Iterable<Text> values, final Context context)
             throws IOException, InterruptedException {
 
-        ArrayList<String> listT = new ArrayList<String>();
-        ArrayList<String> listO = new ArrayList<String>();
-
-        HashMap<String,Integer> Count = new HashMap<>();
+        long countA = 0;
+        long countB = 0;
 
         for (final Text val : values) {
-            if (val.charAt(0) == 'B') {
-                listT.add((val.toString().substring(1)));
+            if (val.charAt(0) == 'A') {
+                countA++;
             }
-            else if (val.charAt(0) == 'A'){
-                listO.add((val.toString().substring(1)));
-
+            else if (val.charAt(0) == 'B'){
+                countB++;
             }
         }
 
-        if (listO.size() != 0) {
-            context.getCounter(RSJoinTriangleCount.COUNTER.TriangleCount).increment(listT.size());
+        if (countA>0){
+            context.getCounter(RSJoinTriangleCount.COUNTER.TriangleCount).increment(countB);
+
         }
-
-    //        HashSet<String> EdgeSet = new HashSet<String>();
-    //        for(Text t :values) {
-    //            if (EdgeSet.contains(t.toString())){
-    //                context.getCounter(RSJoinTriangleCount.COUNTER.TriangleCount).increment(1);
-    //            }
-    //            else{
-    //                EdgeSet.add(t.toString());
-    //            }
-    //        }
-
     }
 
 }

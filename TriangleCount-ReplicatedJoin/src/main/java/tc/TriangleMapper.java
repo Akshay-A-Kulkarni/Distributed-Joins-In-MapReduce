@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 
@@ -24,11 +25,12 @@ public class TriangleMapper extends Mapper<Object, Text, Text, Text> {
     private final Text E2 = new Text();
     private int MAX;
 
-    private HashMap<String, ArrayList<String>> cachedEdges = new HashMap<String, ArrayList<String>>();
+
+    private HashMap<Integer, ArrayList<Integer>> cachedEdges = new HashMap<Integer, ArrayList<Integer>>();
 
     @Override
     public void setup(Context context) throws IOException, InterruptedException {
-        // Get the type of join from our configuration
+        // Get the type of max val from our configuration
         MAX = Integer.parseInt(context.getConfiguration().get("max.filter"));
         if (MAX == -1) {
             MAX = 11316811;
@@ -39,18 +41,22 @@ public class TriangleMapper extends Mapper<Object, Text, Text, Text> {
             try
             {
                 BufferedReader reader = new BufferedReader(new FileReader("CacheFILE"));
-
                 String in;
+
+
+                // Reading in the cache file into a hashmap
 
                 while ((in = reader.readLine()) != null){
                     final String[] line = in.toString().split(",");
-                    if (Integer.parseInt(line[0]) <= MAX & Integer.parseInt(line[1]) <= MAX) {
-                        if (cachedEdges.get(line[0]) == null) { //gets the value for an id)
-                            cachedEdges.put(line[0], new ArrayList<String>()); //no ArrayList assigned, create new ArrayList
-                            cachedEdges.get(line[0]).add(line[1]); //adds value to list.
+                    int n1 = Integer.parseInt(line[0]);
+                    int n2 = Integer.parseInt(line[1]);
+                    if (n1 <= MAX & n2 <= MAX) {
+                        if (cachedEdges.get(n1) == null) {                  //gets the value for an id
+                            cachedEdges.put(n1, new ArrayList<Integer>()); //no ArrayList assigned, create new ArrayList
+                            cachedEdges.get(n1).add(n2);                    //adds value to list.
                         }
                         else{
-                            cachedEdges.get(line[0]).add(line[1]); //adds value to list.
+                            cachedEdges.get(n1).add(n2); //else just adds value to list.
                         }
 
                     }
@@ -67,13 +73,14 @@ public class TriangleMapper extends Mapper<Object, Text, Text, Text> {
     public void map(final Object key, final Text value, final Context context) throws IOException, InterruptedException {
         // each map call gets one line i.e. one edge to process.
         // splitting the incoming edge represented by a line into nodes
-        final String[] edge = value.toString().split(",");
+        final String[] line = value.toString().split(",");
+        final int[] edge = new int[]{Integer.parseInt(line[0]),Integer.parseInt(line[1])};
         // Filter to disregard nodes above the max filter val
-        if (Integer.parseInt(edge[0]) <= MAX & Integer.parseInt(edge[1]) <= MAX) {
-            if (cachedEdges.containsKey(edge[1])) {
-                for (String val : cachedEdges.get(edge[1])) {
-                    if (cachedEdges.containsKey(val)) {
-                        if (cachedEdges.get(val).contains(edge[0])) {
+        if (edge[0] <= MAX & edge[1] <= MAX) {
+            if (cachedEdges.containsKey(edge[1])) {                     // check if node 2 is in hashmap
+                for (int val : cachedEdges.get(edge[1])) {              // get the list of 2paths for node 2
+                    if (cachedEdges.containsKey(val)) {                 // if node 1 is present in the list foreach
+                        if (cachedEdges.get(val).contains(edge[0])) {   //value in as key then triangle is found
                             context.getCounter(RepJoinTriangleCount.COUNTER.TriangleCount).increment(1);
                         }
                     }

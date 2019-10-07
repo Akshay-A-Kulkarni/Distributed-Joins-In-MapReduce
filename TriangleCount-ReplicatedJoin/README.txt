@@ -1,5 +1,5 @@
-Hadoop MapReduce FollowerCount 
-HW1 for CS6240
+Hadoop MapReduce TriangleCount 
+HWw for CS6240
 Fall 2019
 by Akshay kulkarni
 
@@ -21,6 +21,7 @@ All of the build & execution commands are organized in the Makefile.
 4) Edit the Makefile to customize the environment at the top.
 	Sufficient for standalone: hadoop.root, jar.name, local.input
 	Other defaults acceptable for running standalone.
+	NOTE: make sure to set a number for Max-Filter (default is full set 1000 [set to -1 for all nodes])
 5) Standalone Hadoop:
 	make switch-standalone		-- set standalone Hadoop environment (execute once)
 	make local

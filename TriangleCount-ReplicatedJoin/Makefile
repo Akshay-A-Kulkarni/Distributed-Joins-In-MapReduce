@@ -4,25 +4,25 @@
 # Customize these paths for your environment.
 # -----------------------------------------------------------
 hadoop.root=/home/akshay/hadoop-2.9.2
-max.filter = 1000
-jar.name=tc-RepJoin-1.0.jar
+jar.name=RepJoin-TriCoint.jar
 jar.path=target/${jar.name}
-job.name=tc.RepJoinTriangleCount
-local.input=/home/akshay/Desktop/CS6240-LSPDP/Twitter-dataset/data
+job.name=tc.RSJoinTriangleCount
+local.input=input/egdes.csv
 local.output=output
+max.filter=1000
 # Pseudo-Cluster Execution
 hdfs.user.name=akshay
-hdfs.input=input
+hdfs.input=input/egdes.csv
 hdfs.output=output
 # AWS EMR Execution
 aws.emr.release=emr-5.17.0
 aws.region=us-east-1
 aws.bucket.name=mr-median
 aws.subnet.id=subnet-6356553a
-aws.input=input
+aws.input=input/egdes.csv
 aws.output=output
 aws.log.dir=log
-aws.num.nodes=1
+aws.num.nodes=6
 aws.instance.type=m4.large
 # -----------------------------------------------------------
 
@@ -38,7 +38,7 @@ clean-local-output:
 # Make sure Hadoop  is set up (in /etc/hadoop files) for standalone operation (not pseudo-cluster).
 # https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html#Standalone_Operation
 local: jar clean-local-output
-	${hadoop.root}/bin/hadoop jar ${jar.path} ${job.name} ${local.input} ${local.output}
+	${hadoop.root}/bin/hadoop jar ${jar.path} ${job.name} ${local.input} ${local.output} ${max.filter}
 
 # Start HDFS
 start-hdfs:
@@ -90,7 +90,7 @@ pseudo: jar stop-yarn format-hdfs init-hdfs upload-input-hdfs start-yarn clean-l
 
 # Runs pseudo-clustered (quickie).
 pseudoq: jar clean-local-output clean-hdfs-output 
-	${hadoop.root}/bin/hadoop jar ${jar.path} ${job.name} ${hdfs.input} ${hdfs.output}
+	${hadoop.root}/bin/hadoop jar ${jar.path} ${job.name} ${hdfs.input} ${hdfs.output} ${max.filter}
 	make download-output-hdfs
 
 # Create S3 bucket.
@@ -112,11 +112,11 @@ upload-app-aws:
 # Main EMR launch.
 aws: jar upload-app-aws delete-output-aws
 	aws emr create-cluster \
-		--name "WordCount MR Cluster" \
+		--name "MR Cluster" \
 		--release-label ${aws.emr.release} \
 		--instance-groups '[{"InstanceCount":${aws.num.nodes},"InstanceGroupType":"CORE","InstanceType":"${aws.instance.type}"},{"InstanceCount":1,"InstanceGroupType":"MASTER","InstanceType":"${aws.instance.type}"}]' \
 	    --applications Name=Hadoop \
-	    --steps '[{"Args":["${job.name}","s3://${aws.bucket.name}/${aws.input}","s3://${aws.bucket.name}/${aws.output}"],"Type":"CUSTOM_JAR","Jar":"s3://${aws.bucket.name}/${jar.name}","ActionOnFailure":"TERMINATE_CLUSTER","Name":"Custom JAR"}]' \
+	    --steps '[{"Args":["${job.name}","s3://${aws.bucket.name}/${aws.input}","s3://${aws.bucket.name}/${aws.output}","${max.filter}"],"Type":"CUSTOM_JAR","Jar":"s3://${aws.bucket.name}/${jar.name}","ActionOnFailure":"TERMINATE_CLUSTER","Name":"Custom JAR"}]' \
 		--log-uri s3://${aws.bucket.name}/${aws.log.dir} \
 		--use-default-roles \
 		--enable-debugging \
