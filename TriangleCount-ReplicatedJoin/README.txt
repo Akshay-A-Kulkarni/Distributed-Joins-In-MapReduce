@@ -1,5 +1,4 @@
 Hadoop MapReduce TriangleCount 
-HWw for CS6240
 Fall 2019
 by Akshay kulkarni
 
